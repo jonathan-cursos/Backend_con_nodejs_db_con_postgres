@@ -3,7 +3,8 @@ const pool = require('../lib/postgres.pool')
 
 class UserService {
   constructor() {
-    ;(this.pool = pool), this.pool.on('error', (error) => console.log(error)) //
+    this.pool = pool
+    this.pool.on('error', (error) => console.log(error)) //Aquí hacemos la conexión
   }
 
   // async find() {

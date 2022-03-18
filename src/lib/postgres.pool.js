@@ -5,13 +5,15 @@
 */
 
 const { Pool } = require('pg')
+const { config } = require('../config/config')
+
+const USER = encodeURIComponent(config.dbUser) //Estos dos metodos son para proteger los datos más privados de la URL
+const PASSWORD = encodeURIComponent(config.dbPassword)
+const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}` // Conexion recomendada
+//Sí la DB la tenemos en algun servicio como Amazón o Digital Ocean, lnos entregarán la URL como la anterior
 
 const pool = new Pool({
-  host: 'localhost',
-  port: 5432,
-  user: 'admin',
-  password: 'admin123',
-  database: 'control_monitoreo'
+  connectionString: URI //Así si nos conectamos por medio de string
 })
 
 module.exports = pool
