@@ -1,23 +1,17 @@
 // const getConnection = require('../lib/postgres')
-const pool = require('../lib/postgres.pool')
+// const pool = require('../lib/postgres.pool')
+const sequelize = require('../lib/sequelize')
 
 class UserService {
   constructor() {
-    this.pool = pool
-    this.pool.on('error', (error) => console.log(error)) //Aquí hacemos la conexión
+    //El pool ya no es necesario
   }
 
-  // async find() {
-  //   const client = await getConnection() //Creamos la conexión
-  //   const res = await client.query('SELECT * FROM task') //Hacemos la consulta
-  //   return res.rows //Retornamos un array con cada fila de la tabla task
-  // }
-
   async find() {
-    //Ya aquí no abrimos la conexión, sino en el constructor, no una por cada consulta
     const query = 'SELECT * FROM alerts'
-    const res = await this.pool.query(query) //Hacemos la consulta
-    return res.rows //Retornamos un array con cada fila de la tabla task
+    const [data] = await sequelize.query(query) //los datos están en la 1er posición, en la 2da están los metadatos, informacion de la consulta
+    //Actualmente recibe uno customizado, pero puede recibir unos de POO
+    return { data }
   }
 }
 
