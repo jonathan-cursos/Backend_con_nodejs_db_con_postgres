@@ -1,0 +1,57 @@
+version: '3.3' //Versión del yml en el que será tratado este proceso
+
+services: //colocamos dentro los servicios que vamos a correr
+  postgres: //nuestro servicio se llamará postgres, ya que correremos esa DB, pero puede tener cualquier nombre deseado
+    image: postgres:13//Imagen a usar: Vamos a correr en este contenedor postgres en su version 13
+    environment: //Variables de entorno
+      - POSTGRES_DB: control_monitoreo //Los nombres de las env varían segun el servicio
+      - POSTGRES_USER: admin
+      - POSTGRES_PASSWORD: admin123
+    ports: 
+      - 5432:5432 //El puerto en el que va a correr
+    volumes: 
+      - ./postgres_data:/var/lib/postgresql/data //Sí no se coloca un volumen donde almacenar los datos, la data que se guarde se eliminará cuando baje el contenedor
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL: admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - 5050:80
+
+Para levantar este contenedor: docker-compose up -d [nombre_servicio]. Postgres en nuestro caso.
+Para ver los servicios que están corriendo: docker-compose ps.
+Para bajar servicios: docker-compose down [nombre_servicio]: Sí no se coloca el servicio, baja todos los que esten arriba.
+
+El volumen usado dependerá de la DB a usar. En nuestro caso, indicamos que usamos la carpeta postgres_data, esta debe
+  existir en el directorio actual. No se subira esta a github.
+La información de imagenes y configuracion de los servicios se encuentra en: hub.docker.com
+
+
+Para conectarnos al contenedor: docker-compose exec [nombre_servicio] bash
+  .Al ingresar, si listamos los archivos, podemos ver que tiene las carpetas que tendría un OS linux, pues un contenedor es
+    como un computador.
+  .Para conectarlos a la DB postgres dentro del contenedor: psql -h [host] -d [nombre_db] -U [usuario]. Estos datos los
+    configuramos dentro del yml, excepto el host, que como corre en nuestro contenedor sería localhost.
+  .Para salir de un contenedor, colocamos exit.
+
+Dentro de la DB:
+  \d+: Ver la estructura de esa DB.
+  \q: Salir de la DB.
+
+Podemos ver la DB de forma visual si configuramos otro servicio llamado pgadmin, ahí tenemos la configuración.
+Una vez corramos el contenedor, podemos acceder a la interfaz desde el navegador con: localhost:5050 (que fue
+  el configurado). Colocamos las credenciales colocadas.
+
+Ya tenemos la interfaz, pero falta indicar a que servidor de postgres conectarse.
+Para ello: Tools > Create > server:
+  .El nombre se le coloca cualquiera.
+  .En la ventana Connection:
+    -Host Name: El profesor coloca la IP, pero no es recomendable porque cada vez que cerramos el contenedor, este se
+      reinicia, por lo que colocamos el nombre "postgres". El puerto, el usuario y el password son los configurados para
+      el otro contenedor.
+  
+Una vez creado, dentro podemos ver la DB, para ver las tablas vamos a Schemas > Tables.
+En el panel de arriba esta el botón "Query tool", con el que podemos realizar consultas con la tabla señalada.
+Ahí, podemos crear tablas con la linea especifica, que ahora no veremos.

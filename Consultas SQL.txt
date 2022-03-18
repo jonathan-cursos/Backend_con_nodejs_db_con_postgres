@@ -1,0 +1,16 @@
+Crear una tabla:
+  -En la tabla, damos al boton de Query Tool.
+  -La instrucción:
+    CREATE TABLE task (
+      id serial PRIMARY KEY,
+      title VARCHAR (255) NOT NULL,
+      completed boolean DEFAULT false
+    )
+  -Indica que se creará una tabla 'task', con tres columnas:
+    .Un Id autoincrementable.
+    .Un titulo con tipo VARCHAR de 255 que no puede ir vacío.
+    .Un completed, cuyo valor booleano al inicio sea false.
+
+Insertar datos a una tabla desde PGadmin:
+  -Tocamos el campo de la columna que vamos a llenar, y le damos un valor.
+  -Debemos guardarlo con el boton de "Save data changes".
